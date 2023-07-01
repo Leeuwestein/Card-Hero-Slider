@@ -1,0 +1,211 @@
+@font-face {
+  font-family: "Devant";
+  src: url("../../../assets/Devant-Medium.ttf") format("truetype");
+  font-style: normal;
+  font-stretch: expanded; /* Adjust the font-stretch value as needed */
+  letter-spacing: 2px;
+}
+
+.hero {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  box-shadow: 0 0px 1500px 80px rgb(0 0 4) inset;
+  z-index: 1;
+}
+
+.slide {
+  position: absolute;
+  top: 45%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  height: 35vh;
+  width: 10vw;
+  background-position: center;
+  background-size: cover;
+  border-radius: 20px;
+  box-shadow: 7px 13.9px 13.9px hsl(0deg 0% 0% / 0.28);
+  color: #fff;
+  padding: 40px;
+  filter: blur(0px);
+
+  .content {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    opacity: 1;
+
+    span {
+      display: block;
+      transform: translate(0, 0%);
+    }
+
+    .divider {
+      width: 30px;
+      height: 5px;
+      background-color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .content-location {
+      font-size: 1.4em;
+      font-weight: 100;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .content-title.content-title1,
+    .content-title.content-title2 {
+      font-size: 5em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      max-width: 2000px;
+      overflow: hidden;
+      font-family: "Devant";
+    }
+
+    .content-title.content-title2 {
+      margin-top: 0px;
+    }
+
+    .extra-content {
+      opacity: 0;
+      display: none;
+      overflow: hidden;
+
+      span {
+        transform: translate(0, 0);
+      }
+    }
+  }
+}
+
+.slide1 {
+  background-image: url(../../../img/mountainbike.png);
+  filter: blur(0px);
+}
+
+.slide2 {
+  background-image: url(../../../img/camels.png);
+}
+
+.slide3 {
+  background-image: url(../../../img/monkey2.png);
+}
+
+.slide4 {
+  background-image: url(../../../img/Parrots.png);
+}
+
+.slide5 {
+  background-image: url(../../../img/monkey.png);
+}
+
+.slide6 {
+  background-image: url(../../../img/mountainbike.png);
+}
+
+.slide7 {
+  background-image: url(../../../img/camels.png);
+}
+
+.slide8 {
+  background-image: url(../../../img/mountainbike.png);
+}
+
+.slide:first-child {
+  margin: 0 20px 0 0;
+}
+
+.slider-controller {
+  display: flex;
+  position: absolute;
+  top: 90%;
+  left: 43%;
+  width: 55%;
+  align-items: center;
+
+  .slider-base {
+    width: 100%;
+    height: 3px;
+    background-color: #fff;
+    margin-left: 70px;
+  }
+
+  .slider-progress {
+    width: 0px;
+    height: 3px;
+    z-index: 100;
+    background-color: #eeaf30;
+    position: absolute;
+  }
+
+  a.button {
+    position: relative;
+    border: 1px solid #fff;
+    display: block;
+    width: 70px;
+    height: 70px;
+    z-index: 2;
+    border-radius: 500px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+  }
+
+  a.button-left {
+    background-image: url(../../../img/left-arrow-white.png);
+  }
+
+  a.button-right {
+    background-image: url(../../../img/right-arrow-white.png);
+  }
+
+  .button:first-child {
+    margin: 0 20px 0 0;
+  }
+}
+
+.under-content {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  display: none;
+}
+
+.bookmark-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  width: 35px;
+  height: 35px;
+  background-color: #eeaf30;
+  border-radius: 50px;
+  margin-right: 30px;
+}
+
+.discover-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #fff;
+  text-transform: uppercase;
+  padding: 10px;
+  width: 160px;
+  border-radius: 50px;
+}
