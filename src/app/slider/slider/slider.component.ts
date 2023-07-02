@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { gsap, toArray } from 'gsap';
 gsap.registerPlugin(CustomEase);
+import { slidesCollection } from '../slider/slides';
 
 @Component({
   selector: 'app-slider',
@@ -22,16 +23,15 @@ export class SliderComponent implements AfterViewInit {
   @ViewChildren('slideRef')
   slideList!: QueryList<ElementRef>;
 
-  windowWidth: number = 0;
   totalSlidesAnimated: number = 1;
   totalSlides: number = 8;
   currentSlideIndex: number = 0; // Index of the current slide
 
-  slides: ElementRef[] = []; // Array for the slides received from @ViewChildren
+  slidesCollection = slidesCollection; // Slide Data Import from slides.ts
+  slides: ElementRef[] = []; // Array for the slides received from @ViewChildren from the HTML template file
   exitedSlides: ElementRef[] = []; // Array for exited slides
 
   ngAfterViewInit() {
-    this.windowWidth = window.innerWidth;
     this.slides = this.slideList.toArray();
     this.initialPosition();
   }
