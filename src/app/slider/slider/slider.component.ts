@@ -13,7 +13,6 @@ import { slidesCollection } from '../slider/slides';
 import { createStartAnimation } from './animations/startanimation';
 import { createMidAnimation } from './animations/midanimation';
 import { createEndAnimation } from './animations/endanimation';
-import { first } from 'rxjs';
 
 @Component({
   selector: 'app-slider',
@@ -28,8 +27,9 @@ export class SliderComponent implements AfterViewInit {
   slideList!: QueryList<ElementRef>;
 
   // Variable Inits
+  progressBarAnimated: number = 0;
   totalSlidesAnimated: number = 0;
-  totalSlides: number = 8;
+  totalSlides: number = slidesCollection.length;
   currentSlideIndex: number = 0; // Index of the current slide
   slidesCollection = slidesCollection; // Slide Data Import from slides.ts
   slides: ElementRef[] = []; // Array for the slides received from @ViewChildren from the HTML template file
@@ -38,9 +38,13 @@ export class SliderComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.slides = this.slideList.toArray();
     this.initialPosition();
-    // this.initialState();
 
     CustomEase.create('hop', '0.84, 0, 0.23, 1');
+
+    // Trigger nextItem() every 3 seconds
+    setInterval(() => {
+      this.nextItem();
+    }, 3000);
   }
 
   initialPosition() {
@@ -136,17 +140,31 @@ export class SliderComponent implements AfterViewInit {
     timeline3.play();
 
     // Progress Bar
-    const sliderProgress = this.sliderProgress.nativeElement;
-    const progressBarWidth =
-      (100 / this.totalSlides) * (this.currentSlideIndex + 1);
 
-    this.currentSlideIndex++;
+    if (this.sliderProgress.nativeElement) {
+      const sliderProgress = this.sliderProgress.nativeElement;
+      let progressBarWidth =
+        (100 / this.totalSlides) * (this.progressBarAnimated + 1);
 
-    gsap.to(sliderProgress, {
-      width: `${progressBarWidth}%`,
-      duration: 1,
-      ease: 'hop',
-    });
+      this.progressBarAnimated++;
+
+      gsap.to(sliderProgress, {
+        width: `${progressBarWidth}%`,
+        duration: 1,
+        ease: 'hop',
+      });
+
+      if (this.totalSlidesAnimated % 8 === 0) {
+        progressBarWidth = 0;
+        this.progressBarAnimated = 0;
+
+        gsap.to(sliderProgress, {
+          width: '0%',
+          duration: 1,
+          ease: 'hop',
+        });
+      }
+    }
 
     // Animate remaining slides by subtracting 4% from their current left position
     this.slides.forEach((slide, index) => {
@@ -159,5 +177,76 @@ export class SliderComponent implements AfterViewInit {
         ease: 'hop',
       });
     });
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Exit animation to the back of the queue
+
+    const firstSlide = this.exitedSlides[0].nativeElement;
+
+    const firstSlideContent = firstSlide.querySelector('.content');
+
+    const firstContentTitle1 =
+      firstSlideContent.querySelector('.content-title1');
+    const firstContentTitle2 =
+      firstSlideContent.querySelector('.content-title2');
+
+    const firstContentLocation =
+      firstSlideContent.querySelector('.content-location');
+    const firstContentLocationSpan = firstSlideContent.querySelector(
+      '.content-location span'
+    );
+    const firstExtraContent = firstSlideContent.querySelector('.extra-content');
+    const firstExtraContentSpan = firstSlideContent.querySelector(
+      '.extra-content span'
+    );
+
+    if (this.totalSlidesAnimated >= 3) {
+      const firstSlide = this.exitedSlides[0].nativeElement;
+
+      const lastSlide = this.slides[this.slides.length - 1].nativeElement;
+
+      console.log(lastSlide);
+
+      const computedStyle = window.getComputedStyle(lastSlide);
+      const zIndexValue = computedStyle.getPropertyValue('z-index');
+      const newZIndex = parseInt(zIndexValue, 10) + 1;
+
+      gsap.to(firstSlide, {
+        left: '133%',
+        zIndex: newZIndex,
+        height: '35vh',
+        top: '45%',
+        width: '10vw',
+        borderRadius: '20px',
+        duration: 0.01,
+      });
+
+      gsap.to(firstSlideContent, {
+        top: 'initial',
+        duration: 0.01,
+      });
+
+      gsap.to(firstContentLocation, {
+        fontSize: '1.4em',
+        duration: 0.01,
+      });
+
+      gsap.to(firstContentTitle1, {
+        fontSize: '5em',
+        duration: 0.01,
+      });
+
+      gsap.to(firstContentTitle2, {
+        fontSize: '5em',
+        marginTop: '0',
+        duration: 0.01,
+      });
+
+      gsap.to(firstExtraContent, {
+        display: 'none',
+        duration: 0.01,
+      });
+    }
   }
 }
