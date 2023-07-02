@@ -10,6 +10,9 @@ import {
 import { gsap, toArray } from 'gsap';
 gsap.registerPlugin(CustomEase);
 import { slidesCollection } from '../slider/slides';
+import { createStartAnimation } from './animations/startanimation';
+import { createMidAnimation } from './animations/midanimation';
+import { createEndAnimation } from './animations/endanimation';
 
 @Component({
   selector: 'app-slider',
@@ -83,141 +86,38 @@ export class SliderComponent implements AfterViewInit {
     const extraContent = slideContent.querySelector('.extra-content');
     const extraContentSpan = slideContent.querySelector('.extra-content span');
 
+    const timeline1 = createStartAnimation(exitingSlide, slideContent, divider);
+    timeline1.play();
+
+    const timeline2 = createMidAnimation(
+      slideContent,
+      contentTitle1,
+      contentTitle2,
+      contentTitle1span,
+      contentTitle2span,
+      contentLocation,
+      contentLocationSpan,
+      extraContentSpan
+    );
+    timeline2.delay(0.31);
+
+    // Animation part 3/3 - Fade content back in on fullscreen slide
+
+    const timeline3 = createEndAnimation(
+      slideContent,
+      extraContent,
+      divider,
+      contentTitle1span,
+      contentTitle2span,
+      contentLocationSpan,
+      extraContentSpan
+    );
+
+    timeline3.play();
+
     const sliderProgress = this.sliderProgress.nativeElement;
     const progressBarWidth =
       (100 / this.totalSlides) * (this.currentSlideIndex + 1);
-    gsap.to(exitingSlide, {
-      left: 0,
-      top: 0,
-      height: '100vh',
-      width: '100vw',
-      borderRadius: '0',
-      duration: 1,
-      ease: 'hop',
-    });
-
-    // Slide content fading out of the transition
-    gsap.to(slideContent, {
-      duration: 0.3,
-      opacity: 0,
-      display: 'none',
-      ease: 'hop',
-    });
-
-    gsap.to(divider, {
-      duration: 0.3,
-      opacity: 0,
-      ease: 'hop',
-    });
-
-    // Slide Back in
-    ////////////////////////////////////////////////////////////////////////////////////////
-
-    gsap.to(slideContent, {
-      duration: 0.01,
-      opacity: 1,
-      position: 'absolute',
-      maxWidth: '700px',
-      top: '31.7%',
-      left: '60px',
-      delay: 0.31,
-    });
-
-    gsap.to(contentTitle1, {
-      duration: 0.01,
-      delay: 0.31,
-      fontSize: '24em',
-    });
-
-    gsap.to(contentTitle2, {
-      duration: 0.01,
-      delay: 0.31,
-      marginTop: '-65px',
-      fontSize: '24em',
-    });
-
-    gsap.to(contentTitle1span, {
-      duration: 0.01,
-      delay: 0.31,
-      transform: 'translate(0, 220px)',
-    });
-
-    gsap.to(contentTitle2span, {
-      duration: 0.01,
-      delay: 0.31,
-
-      transform: 'translate(0, 220px)',
-    });
-
-    gsap.to(contentLocation, {
-      duration: 0.01,
-      fontSize: '3.4em',
-      delay: 0.31,
-    });
-
-    gsap.to(contentLocationSpan, {
-      duration: 0.01,
-      delay: 0.31,
-      transform: 'translate(0, 120px)',
-    });
-
-    gsap.to(extraContentSpan, {
-      duration: 0.01,
-      delay: 0.31,
-      transform: 'translate(0, 120px)',
-    });
-
-    ////////////////////////////////////////////////////////////////////////////////////////
-
-    gsap.to(extraContent, {
-      duration: 0.01,
-      opacity: 1,
-      display: 'block',
-      delay: 0.63,
-    });
-
-    gsap.to(slideContent, {
-      duration: 0.01,
-      opacity: 1,
-      display: 'block',
-      delay: 0.65,
-    });
-
-    gsap.to(divider, {
-      duration: 0.5,
-      opacity: 1,
-      delay: 0.75,
-    });
-
-    gsap.to(contentLocationSpan, {
-      duration: 0.5,
-      delay: 0.8,
-      transform: 'translate(0, 0px)',
-      ease: 'hop',
-    });
-
-    gsap.to(contentTitle1span, {
-      duration: 0.5,
-      delay: 0.85,
-      transform: 'translate(0, 0px)',
-      ease: 'hop',
-    });
-
-    gsap.to(contentTitle2span, {
-      duration: 0.5,
-      delay: 0.9,
-      transform: 'translate(0, 0px)',
-      ease: 'hop',
-    });
-
-    gsap.to(extraContentSpan, {
-      duration: 0.5,
-      delay: 0.95,
-      transform: 'translate(0, 0px)',
-      ease: 'hop',
-    });
-
-    ////////////////////////////////////////////////////////////////////////////////////////
 
     gsap.to(sliderProgress, {
       width: `${progressBarWidth}%`,
