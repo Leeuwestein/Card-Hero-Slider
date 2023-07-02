@@ -13,6 +13,7 @@ import { slidesCollection } from '../slider/slides';
 import { createStartAnimation } from './animations/startanimation';
 import { createMidAnimation } from './animations/midanimation';
 import { createEndAnimation } from './animations/endanimation';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-slider',
@@ -37,6 +38,8 @@ export class SliderComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.slides = this.slideList.toArray();
     this.initialPosition();
+    // this.initialState();
+
     CustomEase.create('hop', '0.84, 0, 0.23, 1');
   }
 
@@ -44,7 +47,7 @@ export class SliderComponent implements AfterViewInit {
     let previousPosition = 25; // Starting position
     const slideWidthIncrement = 18; // Percentage increment
 
-    // Iterate over the slides array and assign more left CSS positions
+    // Iterate over the slides array and assign new left CSS positions
     for (let i = 0; i < this.slides.length; i++) {
       const slide = this.slides[i].nativeElement;
       const newPosition = previousPosition + slideWidthIncrement;
@@ -63,8 +66,12 @@ export class SliderComponent implements AfterViewInit {
 
     this.exitedSlides.push(exitingSlide);
 
-    const exitedSlideCount = this.exitedSlides.length;
-    const exitedSlideToAnimate = this.exitedSlides[exitedSlideCount - 2];
+    const exitedSlideToAnimate =
+      this.exitedSlides[this.exitedSlides.length - 2];
+
+    this.totalSlidesAnimated++;
+
+    console.log(exitingSlide);
 
     gsap.to(exitedSlideToAnimate, {
       height: '110vh',
@@ -75,7 +82,9 @@ export class SliderComponent implements AfterViewInit {
       ease: 'hop',
     });
 
+    // Base Slide Target
     const slideContent = exitingSlide.querySelector('.content');
+
     const divider = slideContent.querySelector('.divider');
     const contentTitle1 = slideContent.querySelector('.content-title1');
     const contentTitle2 = slideContent.querySelector('.content-title2');

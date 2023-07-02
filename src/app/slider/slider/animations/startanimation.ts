@@ -15,6 +15,7 @@ export const createStartAnimation = (
     width: '100vw',
     borderRadius: '0',
     duration: 1,
+    delay: 0.02,
     ease: 'hop',
   });
 
