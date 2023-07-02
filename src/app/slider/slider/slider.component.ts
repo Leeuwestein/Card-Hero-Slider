@@ -28,7 +28,7 @@ export class SliderComponent implements AfterViewInit {
   slideList!: QueryList<ElementRef>;
 
   // Variable Inits
-  totalSlidesAnimated: number = 1;
+  totalSlidesAnimated: number = 0;
   totalSlides: number = 8;
   currentSlideIndex: number = 0; // Index of the current slide
   slidesCollection = slidesCollection; // Slide Data Import from slides.ts
@@ -61,26 +61,35 @@ export class SliderComponent implements AfterViewInit {
   nextItem() {
     const exitingSlide = this.slides[0].nativeElement;
 
-    // Move the slide from the slides array to the exitedSlides array
-    this.slides.shift();
+    const exitingSlideRef = new ElementRef(exitingSlide);
 
-    this.exitedSlides.push(exitingSlide);
-
-    const exitedSlideToAnimate =
-      this.exitedSlides[this.exitedSlides.length - 2];
+    this.exitedSlides.push(exitingSlideRef);
 
     this.totalSlidesAnimated++;
 
-    console.log(exitingSlide);
+    if (this.totalSlidesAnimated >= 4) {
+      const firstExitedSlide: any = this.exitedSlides.shift();
+      this.slides.push(firstExitedSlide);
+    }
 
-    gsap.to(exitedSlideToAnimate, {
-      height: '110vh',
-      width: '110vw',
-      top: '-10%',
-      left: '-10%',
-      duration: 1,
-      ease: 'hop',
-    });
+    if (this.totalSlidesAnimated >= 2) {
+      const exitedSlideToAnimate =
+        this.exitedSlides[this.exitedSlides.length - 2].nativeElement;
+
+      gsap.to(exitedSlideToAnimate, {
+        height: '110vh',
+        width: '110vw',
+        top: '-10%',
+        left: '-10%',
+        duration: 1,
+        ease: 'hop',
+      });
+    }
+
+    this.slides.shift();
+
+    console.log(this.slides);
+    console.log(this.exitedSlides);
 
     // Base Slide Target
     const slideContent = exitingSlide.querySelector('.content');
