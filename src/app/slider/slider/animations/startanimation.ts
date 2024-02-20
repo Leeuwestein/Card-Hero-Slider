@@ -22,7 +22,7 @@ export const createStartAnimation = (
   startAnimation.to(
     slideContent,
     {
-      duration: 0.3,
+      duration: 0.2,
       opacity: 0,
       display: 'none',
       ease: 'hop',

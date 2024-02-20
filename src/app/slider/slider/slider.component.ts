@@ -2,6 +2,7 @@ import {
   Component,
   ViewChild,
   AfterViewInit,
+  OnInit,
   ElementRef,
   ViewChildren,
   QueryList,
@@ -34,17 +35,34 @@ export class SliderComponent implements AfterViewInit {
   slidesCollection = slidesCollection; // Slide Data Import from slides.ts
   slides: ElementRef[] = []; // Array for the slides received from @ViewChildren from the HTML template file
   exitedSlides: ElementRef[] = []; // Array for exited slides
+  private intervalId: any;
+
+  ngOnInit() {
+    // Start the slider interval when the component is initialized
+    this.intervalId = setInterval(() => {
+      this.nextItem();
+    }, 5000);
+
+    // Add event listener for visibility change
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+  }
 
   ngAfterViewInit() {
     this.slides = this.slideList.toArray();
     this.initialPosition();
 
     CustomEase.create('hop', '0.84, 0, 0.23, 1');
+  }
 
-    // Trigger nextItem() every 3 seconds
-    setInterval(() => {
-      this.nextItem();
-    }, 3000);
+  ngOnDestroy() {
+    // Clear the interval when the component is destroyed to prevent memory leaks
+    clearInterval(this.intervalId);
+
+    // Remove event listener for visibility change
+    document.removeEventListener(
+      'visibilitychange',
+      this.handleVisibilityChange
+    );
   }
 
   initialPosition() {
@@ -249,4 +267,16 @@ export class SliderComponent implements AfterViewInit {
       });
     }
   }
+
+  handleVisibilityChange = () => {
+    if (document.hidden) {
+      // Tab is not visible, so clear the interval to pause the slider
+      clearInterval(this.intervalId);
+    } else {
+      // Tab is visible again, so restart the interval to resume the slider
+      this.intervalId = setInterval(() => {
+        this.nextItem();
+      }, 5000);
+    }
+  };
 }
